@@ -13,11 +13,19 @@
             <?php echo form_open('customer/login'); ?>
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                <input type="email" class="form-control" id="email" name="email"
+                    value="<?php echo set_value('email') ?>" placeholder="name@example.com" autofocus>
+                <div class="bg-danger mt-2">
+                    <strong class="text-white"><?php echo form_error('email'); ?></strong>
+                </div>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="&#9679;&#9679;&#9679;&#9679;">
+                <input type="password" class="form-control" id="password" name="password"
+                    value="<?php echo set_value('password') ?>" placeholder="&#9679;&#9679;&#9679;&#9679;">
+                <div class="bg-danger mt-2">
+                    <strong class="text-white"><?php echo form_error('password'); ?></strong>
+                </div>
             </div>
             <div class="mb-3 text-end">
                 <button type="submit" class="btn btn-outline-primary">OK</button>

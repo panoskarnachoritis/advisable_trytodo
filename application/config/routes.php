@@ -57,15 +57,15 @@ $route['customers'] = 'admin/show_customers';
 $route['message-history'] = 'admin/show_message_history';
 
 //customer section
-$route['login'] = 'customer/index';
+$route['login'] = 'customer/login';
 $route['register'] = 'customer/register';
-$route['my-profile'] = 'customer/login';
+$route['my-profile'] = 'customer/profile';
 $route['form'] = 'customer/show_form';
 $route['history'] = 'customer/show_message_history';
 
 //
 $route['lost-password'] = 'lostPassword/index';
-$route['default_controller'] = 'customer/index';
+$route['default_controller'] = 'customer/login';
 
 $route['(:any)'] = 'customer/index/$1';
 

@@ -22,6 +22,14 @@ textarea{
 	margin-right:25% !important;
 }
 
+.accordion-button:not(.collapsed)::after{
+	display: none !important;
+}
+
+.accordion-button::after{
+	display: none !important;
+}
+
 @media screen and (max-width: 600px) {
 	.offset-1 {
 		margin-left: 0% !important;
