@@ -50,7 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 
-//admin section
+/* //admin section
 $route['admin'] = 'admin/index';
 $route['profile'] = 'admin/login';
 $route['customers'] = 'admin/show_customers';
@@ -64,10 +64,10 @@ $route['form'] = 'customer/show_form';
 $route['history'] = 'customer/show_message_history';
 
 //
-$route['lost-password'] = 'lostPassword/index';
+$route['lost-password'] = 'lostPassword/index'; */
 $route['default_controller'] = 'customer/login';
 
-$route['(:any)'] = 'customer/index/$1';
+$route['(:any)'] = 'customer/login/$1';
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

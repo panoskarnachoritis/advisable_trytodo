@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row me-5 mt-5">
         <div class="text-end">
-            <a class="btn btn-outline-primary px-5" href="<?php echo base_url(); ?>admin">FOR ADMIN</a>
+            <a class="btn btn-outline-primary px-5" href="<?php echo base_url(); ?>admin/login">FOR ADMIN</a>
         </div>
     </div>
 </div>
@@ -28,14 +28,14 @@
                 </div>
             </div>
             <div class="mb-3 text-end">
-                <button type="submit" class="btn btn-outline-primary">OK</button>
+                <button type="submit" class="btn btn-outline-primary px-3">OK</button>
             </div>
             <div class="mb-3 text-center">
-                <a class="text-decoration-none fs-6 px-5 py-2" href="<?php echo base_url(); ?>lost-password">Lost My
+                <a class="text-decoration-none fs-6 px-5 py-2" href="<?php echo base_url(); ?>LostPasswordForCustomer/index">Lost My
                     Password</a>
             </div>
             <div class="mb-3 text-center">
-                <a class="text-decoration-none fs-6 px-5 py-2" href="<?php echo base_url(); ?>register">New Account</a>
+                <a class="text-decoration-none fs-6 px-5 py-2" href="<?php echo base_url(); ?>customer/register">New Account</a>
             </div>
 
             </form>

@@ -4,6 +4,10 @@
         public function register(){
             $title['title'] = 'Register';
 
+            if($this->session->userdata('logged_in')){
+                redirect(''.$this->session->userdata('role').'/profile');
+            }
+
             $this->form_validation->set_rules('firstname', 'First Name', 'required');
             $this->form_validation->set_rules('lastname', 'Last Name', 'required');
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[customers.email]', array('is_unique' => 'This Email is already being used'));
@@ -21,7 +25,7 @@
                 
                 $this->customer_model->register($enc_password);
 
-                redirect('login');
+                redirect('customer/login');
             }
             
         }
@@ -30,7 +34,7 @@
             $title['title'] = 'Login';
 
             if($this->session->userdata('logged_in')){
-                redirect('customer/profile');
+                redirect(''.$this->session->userdata('role').'/profile');
             }
 
             $this->form_validation->set_rules('email', 'Email', 'required');
@@ -46,15 +50,15 @@
 
                 $password = hash ( "sha256", $this->input->post('password') );
 
-                $customer = (array) $this->customer_model->login($email, $password);
+                $customer = $this->customer_model->login($email, $password);
 
                 if($customer){
 
                     $customer_session = array(
-                        'user_id' => $customer['id'],
-                        'firstname' => $customer['firstname'],
-                        'lastname' => $customer['lastname'],
-                        'email' => $customer['email'],
+                        'user_id' => $customer[0]['id'],
+                        'firstname' => $customer[0]['firstname'],
+                        'lastname' => $customer[0]['lastname'],
+                        'email' => $customer[0]['email'],
                         'logged_in' => true,
                         'role' => 'customer'
 
@@ -62,10 +66,12 @@
 
                     $this->session->set_userdata($customer_session);
 
-                    redirect('my-profile');
+                    redirect('customer/profile');
+                    
                 }
                 else{
-                    redirect('login');
+                    
+                    redirect('customer/login');
                 }
             }
 
@@ -80,14 +86,18 @@
             $this->session->unset_userdata('logged_in');
             $this->session->unset_userdata('role');
 
-            redirect('login');
+            redirect('customer/login');
         }
 
         public function profile(){
             $title['title'] = 'My Profile';
 
             if(!$this->session->userdata('logged_in')){
-                redirect('login');
+                redirect('customer/login');
+            }
+
+            if($this->session->userdata('role') == 'admin'){
+                redirect('admin/login');
             }
 
             if(empty($this->session->userdata('firstname')) || empty($this->session->userdata('lastname'))){
@@ -106,19 +116,24 @@
                     'lastname' => $customer['lastname'],
                     'email' => $customer['email']
                 );
+                
+                $this->load->view('templates/header', $title);
+                $this->load->view('customer/navigation', $logged_user);
+                $this->load->view('customer/profile', $user);
+                $this->load->view('templates/footer');
             }
-
-            $this->load->view('templates/header', $title);
-            $this->load->view('customer/navigation', $logged_user);
-            $this->load->view('customer/profile', $user);
-            $this->load->view('templates/footer');
+            
         }
 
         public function show_form(){
             $data['title'] = 'Submit New Form';
 
             if(!$this->session->userdata('logged_in')){
-                redirect('login');
+                redirect('customer/login');
+            }
+
+            if($this->session->userdata('role') == 'admin'){
+                redirect('admin/login');
             }
             
             if(empty($this->session->userdata('firstname')) || empty($this->session->userdata('lastname'))){
@@ -133,11 +148,16 @@
             $this->load->view('customer/form');
             $this->load->view('templates/footer');
         }
+
         public function show_message_history(){
             $title['title'] = 'Message History';
 
             if(!$this->session->userdata('logged_in')){
-                redirect('login');
+                redirect('customer/login');
+            }
+
+            if($this->session->userdata('role') == 'admin'){
+                redirect('admin/login');
             }
 
             if(empty($this->session->userdata('firstname')) || empty($this->session->userdata('lastname'))){
@@ -158,7 +178,11 @@
         public function update(){
 
             if(!$this->session->userdata('logged_in')){
-                redirect('login');
+                redirect('customer/login');
+            }
+
+            if($this->session->userdata('role') == 'admin'){
+                redirect('admin/login');
             }
 
             if($this->customer_model->update()){
@@ -176,11 +200,19 @@
         }
 
         public function submit_form(){
+
             if(!$this->session->userdata('logged_in')){
-                redirect('login');
+                redirect('customer/login');
+            }
+
+            if($this->session->userdata('role') == 'admin'){
+                redirect('admin/login');
             }
 
             if($this->message_model->submit_form()){
+
+                $this->customer_model->update_customer_time($this->session->userdata('user_id'));
+
                 $this->session->set_flashdata('message_submitted', 'The message has been submitted');
             }
 

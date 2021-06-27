@@ -19,9 +19,10 @@
         public function login($email, $password){
             
             $result = $this->db->get_where('customers', array('email' => $email, 'password' => $password));
+            
 
             if($result->num_rows() == 1){
-                return $result->row(0);
+                return $result->result_array();
             }
             else{
                 return false;
@@ -65,7 +66,32 @@
             }
         }
 
-        public function submit_form(){
+        public function update_customer_time($id){
+
+            $this->db->order_by('messages.created_at', 'DESC');
+            $query = $this->db->get_where('messages', array('customer_id' => $id));
             
+            $time = $query->result_array();
+            $data = array(
+                'updated_at' => $time[0]['created_at']
+            );
+
+            $this->db->where('id', $id);
+            $this->db->update('customers', $data);
+        }
+
+        public function get_customers(){
+
+            $this->db->order_by('customers.updated_at', 'DESC');
+            $query = $this->db->get('customers');
+
+            return $query->result_array();
+        }
+
+        public function get_message_history($id){
+
+            $this->db->order_by('messages.created_at', 'DESC');
+            $query = $this->db->get_where('messages', array('customer_id' => $id));
+            return $query->result_array();
         }
     }
