@@ -10,7 +10,8 @@
                 'firstname' => $this->input->post('firstname'),
                 'lastname' => $this->input->post('lastname'),
                 'email' => $this->input->post('email'),
-                'password' => $enc_password
+                'password' => $enc_password,
+                'activated' => FALSE
             );
 
             return $this->db->insert('customers', $data);
@@ -93,5 +94,53 @@
             $this->db->order_by('messages.created_at', 'DESC');
             $query = $this->db->get_where('messages', array('customer_id' => $id));
             return $query->result_array();
+        }
+
+        public function create_activation_link($email){
+
+            $token = md5($email);
+
+            $data = array(
+                'token' => $token,
+                'email' => $email,
+                'reason' => 'email',
+            );
+
+            return $this->db->insert('recoveries', $data);
+
+        }
+
+        public function account_activation($email){
+
+            $data = array(
+                'activated' => TRUE
+            );
+
+            $this->db->where('email', $email);
+            return $this->db->update('customers', $data);
+        }
+
+        public function check_email($email){
+
+            $query = $this->db->get_where('customers', array('email' => $email));
+
+            $result = $query->result_array();
+
+            if(!empty($result)){
+                return TRUE;
+            }
+            else{
+                return FALSE;
+            }
+        }
+
+        public function update_password($email, $password){
+
+            $data = array(
+                'password' => $password
+            );
+
+            $this->db->where('email', $email);
+            return $this->db->update('customers', $data);
         }
     }

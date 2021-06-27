@@ -8,10 +8,10 @@
                 redirect(''.$this->session->userdata('role').'/profile');
             }
 
-            $this->form_validation->set_rules('firstname', 'First Name', 'required');
-            $this->form_validation->set_rules('lastname', 'Last Name', 'required');
+            $this->form_validation->set_rules('firstname', 'First Name');
+            $this->form_validation->set_rules('lastname', 'Last Name');
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[customers.email]', array('is_unique' => 'This Email is already being used'));
-            $this->form_validation->set_rules('password', 'Password', 'required|min_length[5]');
+            $this->form_validation->set_rules('password', 'Password', 'required|min_length[1]');
             $this->form_validation->set_rules('passconf', 'Password Confirmation', 'required|matches[password]');
 
             if($this->form_validation->run() ===FALSE){
@@ -25,7 +25,11 @@
                 
                 $this->customer_model->register($enc_password);
 
-                redirect('customer/login');
+                $this->customer_model->create_activation_link($this->input->post('email'));
+
+                $this->session->set_flashdata('account_created', 'Your account has been created successfully. Please check your email to activate the account');
+
+                redirect('customer/register');
             }
             
         }
@@ -37,7 +41,7 @@
                 redirect(''.$this->session->userdata('role').'/profile');
             }
 
-            $this->form_validation->set_rules('email', 'Email', 'required');
+            $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
             $this->form_validation->set_rules('password', 'Password', 'required');
 
             if($this->form_validation->run() === FALSE){
@@ -52,7 +56,7 @@
 
                 $customer = $this->customer_model->login($email, $password);
 
-                if($customer){
+                if($customer && $customer[0]['activated']){
 
                     $customer_session = array(
                         'user_id' => $customer[0]['id'],
@@ -71,6 +75,8 @@
                 }
                 else{
                     
+                    $this->session->set_flashdata('login_failure', 'Your email or password is incorrect');
+
                     redirect('customer/login');
                 }
             }

@@ -59,4 +59,28 @@
             $this->db->delete('customers');
             return true;
         }
+
+        public function check_email($email){
+
+            $query = $this->db->get_where('admins', array('email' => $email));
+
+            $result = $query->result_array();
+
+            if(!empty($result)){
+                return TRUE;
+            }
+            else{
+                return FALSE;
+            }
+        }
+
+        public function update_password($email, $password){
+
+            $data = array(
+                'password' => $password
+            );
+
+            $this->db->where('email', $email);
+            return $this->db->update('admins', $data);
+        }
     } 
