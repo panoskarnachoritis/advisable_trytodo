@@ -51,6 +51,10 @@
         <?php echo '<p class="alert alert-success text-center">'.$this->session->flashdata('account_activated').'</p>'; ?>
         <?php endif; ?>
 
+        <?php if($this->session->flashdata('password_restored')): ?>
+        <?php echo '<p class="alert alert-success text-center">'.$this->session->flashdata('password_restored').'</p>'; ?>
+        <?php endif; ?>
+
         <?php if($this->session->flashdata('login_failure')): ?>
         <?php echo '<p class="alert alert-danger text-center">'.$this->session->flashdata('login_failure').'</p>'; ?>
         <?php endif; ?>

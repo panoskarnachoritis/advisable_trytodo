@@ -62,6 +62,8 @@
 
             $this->recovery_model->delete_lost_password($result[0]['id']);
 
+            $this->session->set_flashdata('password_restored', 'Your password has been change successfully');
 
+            redirect('customer/login');
         }
     }
